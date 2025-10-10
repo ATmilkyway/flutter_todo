@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class TodoTile extends StatelessWidget {
   final String todoTask;
   final bool isCompleted;
+  final Function(bool?)? onChanged;
 
   const TodoTile({
     super.key,
     required this.todoTask,
     required this.isCompleted,
+    required this.onChanged,
   });
 
   @override
@@ -26,7 +28,7 @@ class TodoTile extends StatelessWidget {
             children: [
               Transform.scale(
                 scale: 1.2,
-                child: Checkbox(value: isCompleted, onChanged: (context) {}),
+                child: Checkbox(value: isCompleted, onChanged: onChanged),
               ),
               Text(
                 todoTask,
@@ -34,6 +36,11 @@ class TodoTile extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
                   color: Color(0xFF1B1B1D),
+                  decoration: isCompleted
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none,
+                  decorationColor: Color(0xFF4A3780),
+                  decorationThickness: 3,
                 ),
               ),
             ],
