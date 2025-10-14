@@ -3,6 +3,10 @@ import 'package:todo/pages/Todo_page.dart';
 
 void main() {
   runApp(const MyApp());
+  // for different screen
+  // runApp(DevicePreview(builder: (context) => const MyApp()));
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
