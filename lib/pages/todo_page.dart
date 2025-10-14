@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/util/dialog_box.dart';
 import 'package:todo/util/todo_tile.dart';
 
 class TodoPage extends StatefulWidget {
@@ -9,6 +10,8 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  final _newTaskInputFieldController = TextEditingController();
+
   final List tasks = [
     ['Finding a Job', false],
     ['Walking with Bobby', false],
@@ -20,6 +23,29 @@ class _TodoPageState extends State<TodoPage> {
     setState(() {
       tasks[index][1] = !tasks[index][1];
     });
+  }
+
+  // saveNewTask
+  void saveNewTask() {
+    setState(() {
+      tasks.add([_newTaskInputFieldController.text, false]);
+    });
+    Navigator.of(context).pop();
+    _newTaskInputFieldController.clear();
+  }
+
+  // addNew task
+  void addNewTask() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          newTaskInputFieldController: _newTaskInputFieldController,
+          onSave: saveNewTask,
+          onCancel: Navigator.of(context).pop,
+        );
+      },
+    );
   }
 
   @override
@@ -43,7 +69,10 @@ class _TodoPageState extends State<TodoPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // addNew task
+          addNewTask();
+        },
         child: Icon(Icons.add),
       ),
     );
