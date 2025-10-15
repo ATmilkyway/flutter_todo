@@ -12,11 +12,12 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   final _newTaskInputFieldController = TextEditingController();
 
-  final List tasks = [
-    ['Finding a Job', false],
-    ['Walking with Bobby', false],
-    ['Washing Dishes', false],
-  ];
+  final List tasks = [];
+  //  final List tasks = [
+  //   ['Finding a Job', false],
+  //   ['Walking with Bobby', false],
+  //   ['Washing Dishes', false],
+  // ];
 
   // checkBoxChnaged
   void checkBoxChnaged(int index) {
@@ -28,7 +29,15 @@ class _TodoPageState extends State<TodoPage> {
   // saveNewTask
   void saveNewTask() {
     setState(() {
-      tasks.add([_newTaskInputFieldController.text, false]);
+      _newTaskInputFieldController.text.isEmpty
+          ? ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No task to add ...'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color(0xFF4A3780),
+              ),
+            )
+          : tasks.add([_newTaskInputFieldController.text, false]);
     });
     Navigator.of(context).pop();
     _newTaskInputFieldController.clear();
@@ -56,18 +65,40 @@ class _TodoPageState extends State<TodoPage> {
         title: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          return TodoTile(
-            todoTask: tasks[index][0],
-            isCompleted: tasks[index][1],
-            onChanged: (value) {
-              checkBoxChnaged(index);
-            },
-          );
-        },
-      ),
+      body: tasks.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No Tasks ...',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4A3780),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Icon(
+                    Icons.hourglass_empty,
+                    size: 80,
+                    color: Color(0xFF4A3780),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                return TodoTile(
+                  todoTask: tasks[index][0],
+                  isCompleted: tasks[index][1],
+                  onChanged: (value) {
+                    checkBoxChnaged(index);
+                  },
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // addNew task
