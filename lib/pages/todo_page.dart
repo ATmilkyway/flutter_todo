@@ -57,10 +57,17 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
+  // onDelete
+  void onDelete(index) {
+    setState(() {
+      tasks.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF1F5F9),
+      backgroundColor: Color.fromARGB(255, 44, 49, 55),
       appBar: AppBar(
         title: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
@@ -95,6 +102,9 @@ class _TodoPageState extends State<TodoPage> {
                   isCompleted: tasks[index][1],
                   onChanged: (value) {
                     checkBoxChnaged(index);
+                  },
+                  onDelete: (context) {
+                    onDelete(index);
                   },
                 );
               },
