@@ -67,7 +67,7 @@ class _TodoPageState extends State<TodoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 44, 49, 55),
+      backgroundColor: Color(0xFFF1F5F9),
       appBar: AppBar(
         title: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,

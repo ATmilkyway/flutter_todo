@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todo/pages/Todo_page.dart';
+import 'package:todo/pages/hive_practice.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
   // for different screen
   // runApp(DevicePreview(builder: (context) => const MyApp()));
 
+  // initialize hive
+  await Hive.initFlutter();
+
+  // open box
+  var box = await Hive.openBox('mybox');
   runApp(const MyApp());
 }
 
@@ -31,7 +38,7 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: TodoPage(),
+      home: HivePractice(),
     );
   }
 }
