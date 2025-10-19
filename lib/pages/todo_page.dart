@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:todo/data/database.dart';
 import 'package:todo/util/dialog_box.dart';
 import 'package:todo/util/todo_tile.dart';
 
@@ -10,20 +12,36 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  final _taskBox = Hive.box('taskBox');
   final _newTaskInputFieldController = TextEditingController();
 
-  final List tasks = [];
+  // final List tasks = [];
   //  final List tasks = [
   //   ['Finding a Job', false],
   //   ['Walking with Bobby', false],
   //   ['Washing Dishes', false],
   // ];
 
+  ToDoDatabase db = ToDoDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    // if this is the first time ever opeing the app
+    if(_taskBox.get("TODOLIST") == null){
+       db.createInitialData();
+    }
+    else{
+      db.loadData();
+
+    }
+  }
   // checkBoxChnaged
   void checkBoxChnaged(int index) {
     setState(() {
-      tasks[index][1] = !tasks[index][1];
+      db.todoList[index][1] = !db.todoList[index][1];
     });
+    db.updateDatabase();
   }
 
   // saveNewTask
@@ -37,10 +55,11 @@ class _TodoPageState extends State<TodoPage> {
                 backgroundColor: Color(0xFF4A3780),
               ),
             )
-          : tasks.add([_newTaskInputFieldController.text, false]);
+          : db.todoList.add([_newTaskInputFieldController.text, false]);
     });
     Navigator.of(context).pop();
     _newTaskInputFieldController.clear();
+    db.updateDatabase();
   }
 
   // addNew task
@@ -60,8 +79,9 @@ class _TodoPageState extends State<TodoPage> {
   // onDelete
   void onDelete(index) {
     setState(() {
-      tasks.removeAt(index);
+      db.todoList.removeAt(index);
     });
+    db.updateDatabase();
   }
 
   @override
@@ -72,7 +92,7 @@ class _TodoPageState extends State<TodoPage> {
         title: Text('T O D O', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
-      body: tasks.isEmpty
+      body: db.todoList.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -95,11 +115,11 @@ class _TodoPageState extends State<TodoPage> {
               ),
             )
           : ListView.builder(
-              itemCount: tasks.length,
+              itemCount: db.todoList.length,
               itemBuilder: (context, index) {
                 return TodoTile(
-                  todoTask: tasks[index][0],
-                  isCompleted: tasks[index][1],
+                  todoTask: db.todoList[index][0],
+                  isCompleted: db.todoList[index][1],
                   onChanged: (value) {
                     checkBoxChnaged(index);
                   },
